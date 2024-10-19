@@ -13,6 +13,33 @@ The above gif demonstrates the two main node types:
 
 C++ implementations for global random functions can be found within the `Sqrl` namespace.
 
+This enum represents the BP exposed rand functionality (c++ also has an unsigned rand but otherwise its fairly consistent across).
+```cpp
+Int
+Bool
+Float
+Vector
+Vector2D
+Rotation
+IntPoint
+Color
+
+IntInRange
+FloatInRange
+VectorInRange
+VectorInCone
+VectorInBox
+Vector2DInRange
+RotationInRange
+IntPointInRange
+ColorInRange
+
+From1DIndex
+From2DIndex
+From3DIndex
+From4DIndex
+```
+
 ---
 
 ### `FSquirrelStream`
