@@ -9,7 +9,7 @@ BFSquirrel is an Unreal Engine implementation of [squirrelnoise5](http://eiserlo
 The above gif demonstrates the two main node types:
 
 - **`Squirrel Rand`** - A generic global random function (designed to replace `FMath::Rand()`).
-- **`Squirrel Rand Stream`** - A struct with its own index and seed for confined randomness.
+- **`Squirrel Stream Rand`** - A struct with its own index and seed for confined randomness.
 
 C++ implementations for global random functions can be found within the `Sqrl` namespace. [Located here](https://github.com/itsBaffled/BFSquirrel/blob/main/BFSquirrel/Source/BFSquirrel/Squirrel/squirrelnoise5.h#L31)
 
