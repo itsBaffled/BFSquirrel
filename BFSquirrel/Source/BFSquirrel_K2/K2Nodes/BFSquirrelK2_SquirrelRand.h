@@ -49,7 +49,8 @@ private:
 private:
 	UPROPERTY()
 	ESquirrelRandType LastEnumType = ESquirrelRandType::Int;
-	UPROPERTY() bool bSolidAlpha = false;
+	UPROPERTY()
+	bool bSolidAlpha = false;
 };
 
 

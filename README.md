@@ -11,7 +11,7 @@ The above gif demonstrates the two main node types:
 - **`Squirrel Rand`** - A generic global random function (designed to replace `FMath::Rand()`).
 - **`Squirrel Rand Stream`** - A struct with its own index and seed for confined randomness.
 
-C++ implementations for global random functions can be found within the `Sqrl` namespace.
+C++ implementations for global random functions can be found within the `Sqrl` namespace. (see `squirrelnoise5.h`)
 
 This enum represents the BP exposed rand functionality (c++ also has an unsigned rand but otherwise its fairly consistent across).
 ```cpp
@@ -55,6 +55,9 @@ Consider a scenario where the server provides every client with a random seed. T
 If a client fires a shotgun and uses the `NextVectorInCone()` function on the stream (or any of them really), the client could send its seed and index to the server. The server can then recreate the exact random stream using the same `NextVectorInCone()` or even `PreviousVectorInCone()`, ensuring that the values remain identical between the client and the server, allowing for roll back or any other determinism.
 
 ---
+
+To Install in your project simply clone the repo and copy the `BFSquirrel` folder into your Plugins folder, any module that wishes to use `BFSquirrel` just needs to add it as a dependency inside of the modules `Build.cs` file.
+
 
 As always, feel free to reach out if you have any questions or issues:
 - [Twitter](https://twitter.com/itsBaffled)

@@ -119,10 +119,7 @@ void UBFSquirrelK2_SquirrelRand::ExpandNode(FKismetCompilerContext& CompilerCont
 FText UBFSquirrelK2_SquirrelRand::GetTooltipText() const
 {
 	if(auto* Pin = FindPin(SqrlK2::Priv::FunctionInputSquirrelRandomType))
-	{
-		FString CurrentType =  Pin->DefaultValue;
-		return SqrlK2::Priv::GetSquirrelRandTypeDescription((ESquirrelRandType)StaticEnum<ESquirrelRandType>()->GetValueByNameString(CurrentType));
-	}
+		return SqrlK2::Priv::GetSquirrelRandTypeDescription((ESquirrelRandType)StaticEnum<ESquirrelRandType>()->GetValueByNameString(Pin->DefaultValue));
 	return FText::GetEmpty();
 }
 
@@ -188,7 +185,7 @@ void UBFSquirrelK2_SquirrelRand::UpdateOutputPinType()
     	LastEnumType = RandType;
     	bSolidAlpha = ParamAPin->DefaultValue == TEXT("true");
 
-    	// Force updates if we have a wildcard type
+    	// If we didn't dirty the dynamic pins by changing the enum type, we can skip this
     	if(!bDirty)
     		return;
     	
@@ -287,193 +284,154 @@ void UBFSquirrelK2_SquirrelRand::UpdateOutputPinType()
             case ESquirrelRandType::IntInRange:
             {
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0");
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
 
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
-	                ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
-            	}
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
+                ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
 				break;
             }
             case ESquirrelRandType::FloatInRange:
             {
 				SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Real, UEdGraphSchema_K2::PC_Float, nullptr, "0");
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Real, UEdGraphSchema_K2::PC_Float, nullptr, "0", false);
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Real, UEdGraphSchema_K2::PC_Float, nullptr, "0", false);
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
-            		ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Real, UEdGraphSchema_K2::PC_Float, nullptr, "0", false);
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Real, UEdGraphSchema_K2::PC_Float, nullptr, "0", false);
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
+            	ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
 				break;
             }
             case ESquirrelRandType::VectorInRange:
             {
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
-            		ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
+            	ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
 				break;
             }
             case ESquirrelRandType::VectorInCone:
             {
 				SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Real, UEdGraphSchema_K2::PC_Float, nullptr, "0");
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::DirPinName;
-            		ParamBPin->PinFriendlyName = SqrlK2::Priv::HalfAnglePinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Real, UEdGraphSchema_K2::PC_Float, nullptr, "0");
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::DirPinName;
+            	ParamBPin->PinFriendlyName = SqrlK2::Priv::HalfAnglePinName;
 				break;
             }
 			case ESquirrelRandType::VectorInBox:
             {
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            	
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
-            		ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
+            	ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
             	break;
             }
             case ESquirrelRandType::Vector2DInRange:
             {
 				SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector2D>::Get());
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector2D>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector2D>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
-            		ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector2D>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FVector2D>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
+            	ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
 				break;
             }
             case ESquirrelRandType::RotationInRange:
             {
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FRotator>::Get());
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FRotator>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FRotator>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
-            		ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FRotator>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FRotator>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
+            	ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
 				break;
             }
             case ESquirrelRandType::IntPointInRange:
             {
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FIntPoint>::Get());
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FIntPoint>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FIntPoint>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
-            		ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FIntPoint>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FIntPoint>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
+            	ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
 				break;
             }
             case ESquirrelRandType::ColorInRange:
             {
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FColor>::Get());
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FColor>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FColor>::Get());
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
-            		ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FColor>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Struct, NAME_None, TBaseStructure<FColor>::Get());
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::MinPinName;
+            	ParamBPin->PinFriendlyName = SqrlK2::Priv::MaxPinName;
 				break;
             }
 			case ESquirrelRandType::From1DIndex:
             {
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0");
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::XIndexPinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::XIndexPinName;
             	break;
             }
         	case ESquirrelRandType::From2DIndex:
 			{
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0");
-				if(bDirty)
-				{
-					SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-					SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-					SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-					SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-					ParamAPin->PinFriendlyName = SqrlK2::Priv::XIndexPinName;
-					ParamBPin->PinFriendlyName = SqrlK2::Priv::YIndexPinName;
-				}
+				SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+				SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+				SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+				SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+				ParamAPin->PinFriendlyName = SqrlK2::Priv::XIndexPinName;
+				ParamBPin->PinFriendlyName = SqrlK2::Priv::YIndexPinName;
 				break;
 			}
         	case ESquirrelRandType::From3DIndex:
             {
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0");
-	            if(bDirty)
-	            {
-	            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-	            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-	            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-	            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
-	            	ParamAPin->PinFriendlyName = SqrlK2::Priv::XIndexPinName;
-	            	ParamBPin->PinFriendlyName = SqrlK2::Priv::YIndexPinName;
-	            	ParamCPin->PinFriendlyName = SqrlK2::Priv::ZIndexPinName;
-	            }
+	            SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+	            SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+	            SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+	            SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", true);
+	            ParamAPin->PinFriendlyName = SqrlK2::Priv::XIndexPinName;
+	            ParamBPin->PinFriendlyName = SqrlK2::Priv::YIndexPinName;
+	            ParamCPin->PinFriendlyName = SqrlK2::Priv::ZIndexPinName;
 	            break;
             }
 			case ESquirrelRandType::From4DIndex:
             {
             	SqrlK2::Priv::SetPinValues(ResultPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0");
-            	if(bDirty)
-            	{
-            		SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-            		SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-            		SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-            		SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
-            		ParamAPin->PinFriendlyName = SqrlK2::Priv::XIndexPinName;
-            		ParamBPin->PinFriendlyName = SqrlK2::Priv::YIndexPinName;
-            		ParamCPin->PinFriendlyName = SqrlK2::Priv::ZIndexPinName;
-            		ParamDPin->PinFriendlyName = SqrlK2::Priv::WIndexPinName;
-            	}
+            	SqrlK2::Priv::SetPinValues(ParamAPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+            	SqrlK2::Priv::SetPinValues(ParamBPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+            	SqrlK2::Priv::SetPinValues(ParamCPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+            	SqrlK2::Priv::SetPinValues(ParamDPin, UEdGraphSchema_K2::PC_Int, NAME_None, nullptr, "0", false);
+            	ParamAPin->PinFriendlyName = SqrlK2::Priv::XIndexPinName;
+            	ParamBPin->PinFriendlyName = SqrlK2::Priv::YIndexPinName;
+            	ParamCPin->PinFriendlyName = SqrlK2::Priv::ZIndexPinName;
+            	ParamDPin->PinFriendlyName = SqrlK2::Priv::WIndexPinName;
             	break;
             }
         }
