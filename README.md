@@ -11,7 +11,7 @@ The above gif demonstrates the two main node types:
 - **`Squirrel Rand`** - A generic global random function (designed to replace `FMath::Rand()`).
 - **`Squirrel Rand Stream`** - A struct with its own index and seed for confined randomness.
 
-C++ implementations for global random functions can be found within the `Sqrl` namespace.
+C++ implementations for global random functions can be found within the `Sqrl` namespace. [Located here](https://github.com/itsBaffled/BFSquirrel/blob/main/BFSquirrel/Source/BFSquirrel/Squirrel/squirrelnoise5.h#L31)
 
 This enum represents the BP exposed rand functionality (c++ also has an unsigned rand but otherwise its fairly consistent across).
 ```cpp
